@@ -1,24 +1,35 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useGameStore } from "@/state/gameStore";
 import { useKeyboard } from "@/hooks/useKeyboard";
 
 export default function GameCanvas() {
     const { map, player, movePlayer, initMap } = useGameStore();
+    const [viewSize, setViewSize] = useState({ width: 15, height: 15 }); // default
+    const TILE_SIZE = 16;
 
-    // Always call hooks on every render
     useKeyboard(movePlayer);
 
-    // Initialize the map on mount / when empty
+    // run only in the browser
+    useEffect(() => {
+        const updateSize = () => {
+            const width = Math.floor(window.innerWidth / TILE_SIZE / 1.5);
+            const height = Math.floor(window.innerHeight / TILE_SIZE / 1.5);
+            setViewSize({ width, height });
+        };
+
+        updateSize(); // set initial
+        window.addEventListener("resize", updateSize);
+        return () => window.removeEventListener("resize", updateSize);
+    }, []);
+
     useEffect(() => {
         if (map.length === 0) initMap();
     }, [map.length, initMap]);
 
-    // Config
-    const TILE_SIZE = 16;
-    const VIEW_WIDTH = Math.floor(window.innerWidth / TILE_SIZE / 1.5);
-    const VIEW_HEIGHT = Math.floor(window.innerHeight / TILE_SIZE / 1.5);
+    const VIEW_WIDTH = viewSize.width;
+    const VIEW_HEIGHT = viewSize.height;
 
 
     const mapCols = map[0]?.length ?? 0;
