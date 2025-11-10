@@ -38,7 +38,7 @@ export const useGameStore = create<GameState>((set, get) => ({
     },
 
     initMap: () => {
-        const map = generateMap(20, 20);
+        const map = generateMap(100, 100);
         let spawn = { x: 0, y: 0 };
 
         outer: for (let y = 0; y < map.length; y++) {

@@ -7,7 +7,7 @@ export interface Tile {
 }
 
 // strongly type your generator
-export function generateMap(width = 20, height = 20): Tile[][] {
+export function generateMap(width = 0, height = 0): Tile[][] {
     const map: Tile[][] = [];
 
     for (let y = 0; y < height; y++) {
